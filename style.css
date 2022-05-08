@@ -18,10 +18,16 @@ h1 {
 	color:#006699;
 	text-align: center;
 }
+header {
+  display: flex;
+  flex-flow: row wrap;
+  
+}
+
 header img {
   display: block;
   height: 40px;
-  padding-top: 10px;
+  padding-top: 40px;
 }
 
 
