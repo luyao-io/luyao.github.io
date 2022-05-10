@@ -29,12 +29,19 @@ header img {
   height: 40px;
   padding-top: 40px;
 }
-
+iframe {
+        float: left;
+        margin: 0 20px 20px 0;
+        max-width: 100%;
+      }
 
 h2 {
   color:#64A1CD;
   font-size: 1.3em;
 }
+article {
+        padding: 5px;
+      }
 
 p,ul,ol,dl,address {
   font-family: 'Roboto Condensed', sans-serif;
