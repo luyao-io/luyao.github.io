@@ -1,53 +1,124 @@
 /* || General setup */
+
 html, body {
   margin: 0;
   padding: 0;
 }
+
+html {
+  font-size: 10px;
+  background-color: #a9a9a9;
+}
+
 body {
-  width: 80%;
+  width: 70%;
   min-width: 800px;
   margin: 0 auto;
 }
-.sender-column {
-  text-align: right;
+
+/* || typography */
+
+h1, h2, h3 {
+  font-family: 'Cinzel Decorative', cursive;
+  color: #2a2a2a;
+}
+
+
+h1 {
+  font-size: 4rem;
+  text-align: center;
+  color:#006699;
+}
+
+h2 {
+  font-size: 3rem;
+  text-align: center;
+}
+
+h3 {
+  font-size: 2.2rem;
+}
+
+p, li {
+  font-size: 1.6rem;
+  line-height: 1.5;
+}
+
+/* || header layout */
+
+header {
+  margin-bottom: 10px;
+  display: flex;
+  flex-flow: row wrap;
+}
+
+body > * {
+  background-color: red;
+  padding: 1%;
+}
+
+main, header, nav, article, aside, footer, section {
+  background-color: rgba(198,212,222);
+  padding: 1%;
 }
 
 h1 {
-	font-family: 'Cinzel Decorative', cursive;
-	font-size: 3rem;
-	color:#006699;
-	text-align: center;
-}
-header {
-  display: flex;
-  flex-flow: row wrap;
-  
+  flex: 5;
+  text-transform: uppercase;
 }
 
 header img {
   display: block;
-  height: 40px;
-  padding-top: 40px;
-}
-iframe {
-        float: left;
-        margin: 0 10px 10px 0;
-        max-width: 100%;
-      }
-
-h2 {
-  color:#64A1CD;
-  font-size: 1.3em;
-}
-article {
-        padding: 10px;
-      }
-
-p,ul,ol,dl,address {
-  font-family: 'Roboto Condensed', sans-serif;
-  font-size: 1.1em;
+  height: 60px;
+  padding-top: 20.15px;
 }
 
-p, li, dd, dt, address {
-  line-height: 1.5;
+nav {
+  height: 50px;
+  flex: 100%;
+  display: flex;
+}
+
+nav ul {
+  padding: 0;
+  list-style-type: none;
+  flex: 2;
+  display: flex;
+}
+
+nav li {
+  display: inline;
+  text-align: center;
+  flex: 1;
+}
+
+nav a, nav span {
+  display: inline-block;
+  font-size: 1.5rem;
+  height: 3rem;
+  line-height: 1.7;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: black;
+
+}
+
+/* || main layout */
+
+
+
+a:link,
+a:visited{
+	text-decoration:none;
+	color:#64A1CD;
+	
+}
+a:hover{
+	color:orange;
+	
+}
+
+footer {
+  margin-top: 10px;
+  text-align:right;
 }
