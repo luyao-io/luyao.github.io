@@ -50,6 +50,8 @@ header {
   margin-bottom: 10px;
   display: flex;
   flex-flow: row wrap;
+  	background: rgb(215,211,213);
+	background: radial-gradient(circle, rgba(215,211,213,1) 0%, rgba(148,187,233,1) 100%);
 }
 
 body > * {
@@ -57,7 +59,7 @@ body > * {
   padding: 1%;
 }
 
-main, header, nav, article, aside, footer, section {
+main, article, nav,aside, footer, section {
   background-color: rgba(198,212,222);
   padding: 1%;
 }
@@ -74,9 +76,10 @@ header img {
 }
 
 nav {
-  height: 50px;
-  flex: 100%;
-  display: flex;
+	height: 50px;
+	flex: 100%;
+	display: flex;
+
 }
 
 nav ul {
