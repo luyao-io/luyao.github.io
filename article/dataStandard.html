@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>浅谈数据规范</title>
-    <link rel="stylesheet" href="../css/style.css" />
+    <link rel="stylesheet" href="../style.css" />
   </head>
 
   <body class="stackedit">
@@ -49,13 +49,10 @@
         <li>
           表名、字段名只能使用英文字母、数字、下划线，英文字母开头，禁止两个下划线中间出现数字，对象名的修改代价很大，对下游容易造成影响，谨慎修改。
         </li>
-        <li>临时表以tmp开头，日期作为后缀</li>
-        <li>备份表以bak开头，日期作为后缀</li>
-        <li>序列以seq开头</li>
+        <li>临时表增加tmp标记，备份表增加bak标记，序列以seq标记，明确定位。</li>
         <li>
           主键使用pk_，唯一约束使用uk_（另外补充一点，主键和唯一约束的区别在于：<strong>主键约束只有一个，唯一约束有多个</strong>）
-        </li>
-        <li>普通索引使用idx_，唯一索引使用uidx_。</li>
+        . 普通索引使用idx_，唯一索引使用uidx_区分。</li>
       </ol>
       <h2><a id="_27"></a>表设计规范</h2>
       <ol>
