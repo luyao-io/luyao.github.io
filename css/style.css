@@ -76,9 +76,7 @@ header {
 	background: radial-gradient(circle, rgba(215,211,213,1) 0%, rgba(148,187,233,1) 100%);
 }
 
-body > * {
-  padding: 1%;
-}
+
 
 main, article, nav,aside, footer, section {
   padding: 1%;
@@ -86,13 +84,12 @@ main, article, nav,aside, footer, section {
 
 h1 {
   flex: 5;
-  text-transform: uppercase;
+
 }
 
 header img {
   display: block;
   height: 40px;
-  padding-top: 40.15px;
 }
 
 nav {
@@ -102,28 +99,60 @@ nav {
 
 }
 
-nav ul {
-  padding: 0;
-  list-style-type: none;
-  flex: 2;
-  display: flex;
+
+ 
+ .topclick {
+	  height: 50px;
+    width: 100px;
+    position:relative;
+    display:inline-block;
+
+	 
+margin-left:90%;
+
+	color:inherit;
+	font-size:1.3em;
+	color:#006699;
+}
+ 
+.ltbox1 {
+	 height: 30px;
+    width: 100px;
+	padding-bottom:10px;
+    text-align: left;
+    line-height: 50px;
+    cursor: pointer;        /*鼠标指针经过*/
+}
+.ltbox2{
+	width: 100px;
+    height: 150px;
+    margin-top: 2px;
+
+    border-radius: 10px;
+    background-color: white;
+    position:absolute;
+    display: none;        /*使下拉菜单栏消失*/
+}
+ 
+.ltbox2 li{
+    height: 30px;
+    width: 150px;
+    text-align: left;
+	text-decoration:underline;
+    line-height: 30px;
+    display: block;        /*使下拉菜单栏显示*/
+	font-size:0.7em;
 }
 
-nav li {
-  display: inline;
-  text-align: center;
-  flex: 1;
+ 
+.topclick:hover .ltbox2{
+    display: block;
 }
 
-nav a, nav span {
-  display: inline-block;
-  font-size: 1.5rem;
-  height: 3rem;
-  line-height: 1.7;
-  text-decoration: none;
-  color: black;
 
-}
+
+
+
 
 /* || main layout */
 
@@ -154,4 +183,26 @@ b,strong {
 	font-weight:inherit;
 	font-weight:bolder
 }
+code {
+    background: var(--code-background-inline);
+    padding: 0.125rem 0.25rem;
+    width: -webkit-fit-content;
+    width: -moz-fit-content;
+    width: fit-content;
+}
+::marker {
+    unicode-bidi: isolate;
+    font-variant-numeric: tabular-nums;
+    text-transform: none;
+    text-indent: 0px !important;
+    text-align: start !important;
+    text-align-last: start !important;
+}
 
+
+.prism .token.atrule,.prism .token.attr-value,.prism .token.keyword,.token.pre.gfm .token.atrule,.token.pre.gfm .token.attr-value,.token.pre.gfm .token.keyword {
+	color:#07a
+}
+.prism .token.attr-name,.prism .token.builtin,.prism .token.char,.prism .token.inserted,.prism .token.selector,.prism .token.string,.token.pre.gfm .token.attr-name,.token.pre.gfm .token.builtin,.token.pre.gfm .token.char,.token.pre.gfm .token.inserted,.token.pre.gfm .token.selector,.token.pre.gfm .token.string {
+	color:#690
+}
