@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>浅谈Kettle</title>
+    <link rel="stylesheet" href="../style.css" />
+  </head>
+
+  <body >
+    <div >
+      <p></p>
+      <div class="toc">
+        <h3>浅谈Kettle</h3>
+        <ul>
+          <li><a href="#_2">概览</a></li>
+          <ul>
+            <li><a href="#_10">回刷历史数据</a></li>
+            <li><a href="#_15">血缘关系解析</a></li>
+            <li><a href="#_27">数据质量监控</a></li>
+   
+          </ul>
+        </ul>
+      </div>
+      <p></p>
+      <h2><a id="_2"></a>概览</h2>
+      <p>Kettle是一款开源的ETL工具，纯Java编写，工作中经常用到一些转换，特此记录。</p>
+
+      <h2><a id="_10"></a>回刷历史数据</h2>
+      <p>
+        如果历史数据需要大批量回刷，按照时间段跑数据，动辄几亿甚至千亿的数据操作会造成数据库断连，Select的时间可以达到十几分钟，按日跑需要不断地进行改参数，循环脚本可解决
+      </p>
+      <img src='../resource/image/kettle_1.jpg'>
+	  <p>job中对ETL参数做初始设置：</p>
+	  <p><img src='../resource/image/kettle_2.jpg' alt='参数初始化'><p>
+<pre><code class="prism language-bash"><span class="token keyword">select</span>	to_number<span class="token punctuation">(</span>to_char<span class="token punctuation">(</span>date<span class="token punctuation">(</span><span class="token string">'20210731'</span><span class="token punctuation">)</span>,<span class="token string">'yyyymmdd'</span><span class="token punctuation">))</span> as p_sysdate_num,
+	to_number<span class="token punctuation">(</span>to_char<span class="token punctuation">(</span>etl_date,<span class="token string">'yyyymmdd'</span><span class="token punctuation">))</span> as p_etl_date_num,
+	to_char<span class="token punctuation">(</span>etl_date,<span class="token string">'yyyymmdd'</span><span class="token punctuation">)</span> as p_etl_date
+	from tmp.etl_incremental
+</code></pre>
+<p>ETL日期经过转换，到字段检验<br>
+<img src="../resource/image/kettle_3.jpg" alt="检验字段的值"><br>
+如果值小于设置的结束日期，进入循环。<br>
+<img src="../resource/image/kettle_4.jpg" alt="循环日期"></p>
+<pre><code class="prism language-bash"><span class="token keyword">select</span>	jobname, trans_name, table_name, etl_frequency,
+	etl_date+1  as p_next_etl_date
+	from tmp.etl_incremental
+</code></pre>
+<p>对ETL日期更新，更新之后执行转换。</p>
+
+      <h2><a id="_15"></a>血缘关系解析</h2>
+     <p><img src="../resource/image/kettle_5.jpg" alt="导出xml"><br>
+资源导出成xml文件<br>
+<img src="../resource/image/kettle_6.jpg" alt="解析xml"><br>
+从xml中获取到步骤和转换，转换和转换，作业和转换之间的关系，方便追踪血缘关系，为下一步数据治理打好基础。</p>
+
+      <h2><a id="_41"></a>数据质量监控</h2>
+      <p><img src="../resource/image/kettle_7.jpg" alt="数据量对比"><br>
+ETL同步在实际过程中，往往会遇见上游回刷，每日监控同步数据量及重要指标</p>
+</div>
+  </body>
+</html>
