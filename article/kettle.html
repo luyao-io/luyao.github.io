@@ -6,8 +6,8 @@
     <link rel="stylesheet" href="../css/style.css" />
   </head>
 
-  <body >
-    <div >
+  <body>
+    <div>
       <p></p>
       <div class="toc">
         <h3>浅谈Kettle</h3>
@@ -17,45 +17,84 @@
             <li><a href="#_10">回刷历史数据</a></li>
             <li><a href="#_15">血缘关系解析</a></li>
             <li><a href="#_27">数据质量监控</a></li>
-   
           </ul>
         </ul>
       </div>
       <p></p>
       <h2><a id="_2"></a>概览</h2>
-      <p>Kettle是一款开源的ETL工具，纯Java编写，工作中经常用到一些转换，特此记录。</p>
+      <p>
+        Kettle是一款开源的ETL工具，纯Java编写，工作中经常用到一些转换，特此记录。
+      </p>
 
       <h2><a id="_10"></a>回刷历史数据</h2>
       <p>
         如果历史数据需要大批量回刷，按照时间段跑数据，动辄几亿甚至千亿的数据操作会造成数据库断连，Select的时间可以达到十几分钟，按日跑需要不断地进行改参数，循环脚本可解决
       </p>
-      <img src='../resource/image/kettle/kettle_1.jpg'>
-	  <p>job中对ETL参数做初始设置：</p>
-	  <p><img src='../resource/image/kettle/kettle_2.jpg' alt='参数初始化'><p>
-<pre><code class="prism language-bash"><span class="token keyword">select</span>	to_number<span class="token punctuation">(</span>to_char<span class="token punctuation">(</span>date<span class="token punctuation">(</span><span class="token string">'20210731'</span><span class="token punctuation">)</span>,<span class="token string">'yyyymmdd'</span><span class="token punctuation">))</span> as p_sysdate_num,
+      <h3>方式一</h3>
+      <img src="../resource/image/kettle/kettle_1.jpg" />
+      <p>job中对ETL参数做初始设置：</p>
+      <p>
+        <img src="../resource/image/kettle/kettle_2.jpg" alt="参数初始化" />
+        <p></p>
+        <pre><code class="prism language-bash"><span class="token keyword">select</span>	to_number<span class="token punctuation">(</span>to_char<span class="token punctuation">(</span>date<span class="token punctuation">(</span><span class="token string">'20210731'</span><span class="token punctuation">)</span>,<span class="token string">'yyyymmdd'</span><span class="token punctuation">))</span> as p_sysdate_num,
 	to_number<span class="token punctuation">(</span>to_char<span class="token punctuation">(</span>etl_date,<span class="token string">'yyyymmdd'</span><span class="token punctuation">))</span> as p_etl_date_num,
 	to_char<span class="token punctuation">(</span>etl_date,<span class="token string">'yyyymmdd'</span><span class="token punctuation">)</span> as p_etl_date
 	from tmp.etl_incremental
 </code></pre>
-<p>ETL日期经过转换，到字段检验<br>
-<img src="../resource/image/kettle/kettle_3.jpg" alt="检验字段的值"><br>
-如果值小于设置的结束日期，进入循环。<br>
-<img src="../resource/image/kettle/kettle_4.jpg" alt="循环日期"></p>
-<pre><code class="prism language-bash"><span class="token keyword">select</span>	jobname, trans_name, table_name, etl_frequency,
+      </p>
+
+      <p>
+        ETL日期经过转换，到字段检验<br />
+        <img
+          src="../resource/image/kettle/kettle_3.jpg"
+          alt="检验字段的值"
+        /><br />
+        如果值小于设置的结束日期，进入循环。<br />
+        <img src="../resource/image/kettle/kettle_4.jpg" alt="循环日期" />
+      </p>
+      <pre><code class="prism language-bash"><span class="token keyword">select</span>	jobname, trans_name, table_name, etl_frequency,
 	etl_date+1  as p_next_etl_date
 	from tmp.etl_incremental
 </code></pre>
-<p>对ETL日期更新，更新之后执行转换。</p>
+      <p>对ETL日期更新，更新之后执行转换。</p>
+      <h3>方式二</h3>
+      <p>
+        在job中连线闭环，通过【检验字段的值】判断结束循环，该方式较一，出现问题容易导致kettle崩溃。<img
+          src="../resource/image/kettle/kettle_8.png"
+          alt="job设置"
+        /><br />
+        在日期初始化中设置开始日期和结束日期，设置变量中参数需<mark>大写</mark>
+        <img
+          src="../resource/image/kettle/kettle_9.png"
+          alt="日期初始化"
+        /><br />
+        设置变量后在job和转换中均可以通过${参数}使用<br />
+        <img
+          src="../resource/image/kettle/kettle_10.png"
+          alt="设置变量"
+        /><br />
+        表输入中对日期进行增量处理，赋值给变量<br />
+        <img src="../resource/image/kettle/kettle_11.png" alt="循环日期" />
+        这一步是sql执行脚本，在trans属性的命名参数中可增加常量参数。<br />
+        <img src="../resource/image/kettle/kettle_12.png" alt="执行脚本" />
+      </p>
 
       <h2><a id="_15"></a>血缘关系解析</h2>
-     <p><img src="../resource/image/kettle/kettle_5.jpg" alt="导出xml"><br>
-资源导出成xml文件<br>
-<img src="../resource/image/kettle/kettle_6.jpg" alt="解析xml"><br>
-从xml中获取到步骤和转换，转换和转换，作业和转换之间的关系，方便追踪血缘关系，为下一步数据治理打好基础。</p>
+      <p>
+        <img src="../resource/image/kettle/kettle_5.jpg" alt="导出xml" /><br />
+        资源导出成xml文件<br />
+        <img src="../resource/image/kettle/kettle_6.jpg" alt="解析xml" /><br />
+        从xml中获取到步骤和转换，转换和转换，作业和转换之间的关系，方便追踪血缘关系，为下一步数据治理打好基础。
+      </p>
 
       <h2><a id="_41"></a>数据质量监控</h2>
-      <p><img src="../resource/image/kettle/kettle_7.jpg" alt="数据量对比"><br>
-ETL同步在实际过程中，往往会遇见上游回刷，每日监控同步数据量及重要指标</p>
-</div>
+      <p>
+        <img
+          src="../resource/image/kettle/kettle_7.jpg"
+          alt="数据量对比"
+        /><br />
+        ETL同步在实际过程中，往往会遇见上游回刷，每日监控同步数据量及重要指标
+      </p>
+    </div>
   </body>
 </html>
