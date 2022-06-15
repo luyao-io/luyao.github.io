@@ -86,7 +86,10 @@ h1 {
   flex: 5;
 
 }
-
+img {
+	max-width:100%;
+	background-size:contain;
+}
 header img {
   display: block;
   height: 40px;
