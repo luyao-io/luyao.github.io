@@ -1,46 +1,5 @@
 /* || General setup */
 
-
-.stackedit__toc ul{
-	padding:0
-}
-.stackedit__toc ul a{
-	margin:.5rem 0;
-	padding:.5rem 1rem
-}
-.stackedit__toc ul ul{
-	color:#888;
-	font-size:.9em
-}
-.stackedit__toc ul ul a{
-	margin:0;
-	padding:.1rem 1rem
-}
-.stackedit__toc li{
-	display:block
-}
-.stackedit__toc a{
-	display:block;
-	color:inherit;
-	text-decoration:none
-}
-.stackedit__toc a:active,.stackedit__toc a:focus,.stackedit__toc a:hover{
-	background-color:rgba(0,0,0,.075);
-	border-radius:3px
-}
-.stackedit__left{
-	position:fixed;
-	display:none;
-	width:250px;
-	height:100%;
-	top:0;
-	left:0;
-	overflow-x:hidden;
-	overflow-y:auto;
-	-webkit-overflow-scrolling:touch;
-	-ms-overflow-style:none
-}
-
 @font-face {
     font-family: 'josefin_slabbold';
     src: url('fonts/josefinslab-bold-webfont.eot');
