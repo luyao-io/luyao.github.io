@@ -70,8 +70,17 @@ h2:after {
 	display:block;
 	position:relative;
 	top:.33em;
-	border-bottom:1px solid hsla(0,0%,50%,.33)
+	border-bottom:1px dashed hsla(0,0%,50%,.33)
 }
+  .grid {
+    margin: 0 auto;
+    padding: 0 20px;
+    max-width: 980px;
+    display: grid;
+    grid-template-columns: 3fr 1fr;
+    grid-gap: 20px;
+  }
+  
 
 h3 {
   font-size: 1rem;
@@ -135,50 +144,6 @@ nav {
     }
   
 
- .topclick {
-	  height: 50px;
-    width: 100px;
-    position:relative;
-    display:inline-block;
-
-	 
-margin-left:90%;
-
-	color:inherit;
-	font-size:1.3em;
-	color:#006699;
-}
- 
-.ltbox1 {
-	 height: 30px;
-    width: 100px;
-	padding-bottom:10px;
-	margin-bottom: 2rem;
-    text-align: left;
-    line-height: 3em;
-    cursor: pointer;        /*鼠标指针经过*/
-}
-.ltbox2{
-	width: 100px;
-    height: 150px;
-    margin-top: 2px;
-
-    border-radius: 10px;
-    background-color: white;
-    position:absolute;
-    display: none;        /*使下拉菜单栏消失*/
-}
- 
-.ltbox2 li{
-    height: 30px;
-    width: 150px;
-    text-align: left;
-	text-decoration:underline;
-    line-height: 30px;
-    display: block;        /*使下拉菜单栏显示*/
-	font-size:0.7em;
-}
-
  
 .topclick:hover .ltbox2{
     display: block;
@@ -235,7 +200,6 @@ code {
     text-align: start !important;
     text-align-last: start !important;
 }
-
 
 .stackedit__toc ul{
 	padding:0
