@@ -5,12 +5,27 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>MIT 6.031：Software Constructtion</title>
-   <link rel="stylesheet" href="../css/style.css" />
+     <link rel="stylesheet" href="../css/style.css" />
 </head>
 
 <body class="stackedit">
+
+<div class="stackedit__left">
+    <div class="stackedit__toc">
+<ul>
+<li>
+<ul>
+<li><a href="#：static-checking">01：Static Checking</a></li>
+<li><a href="#：basic-java">02：Basic Java</a></li>
+</ul>
+</li>
+</ul>
+
+    </div>
+  </div>
+   <div class="stackedit__right"> 
   <div class="stackedit__html"><h1 id="mit-6.031：software-constructtion">MIT 6.031：Software Constructtion</h1>
-<h2 id="static-checking">Static Checking</h2>
+<h2 id="：static-checking">01：Static Checking</h2>
 <p><em>冰雹序列：冰雹在云中通过上下弹跳而成，直到他们最终积聚重量最后落下。</em><br>
 Python代码：</p>
 <pre><code>  
@@ -43,13 +58,13 @@ public class Main {
   }  
 }
 </code></pre>
-<h2 id="静态检查、动态检查、不检查">静态检查、动态检查、不检查</h2>
+<h3 id="静态检查、动态检查、不检查">静态检查、动态检查、不检查</h3>
 <ul>
 <li>静态检查：主要是语法上的检查，比如类型错误，内存溢出，拼写错误等，在代码执行前检查。</li>
 <li>动态检查：针对于某个特定值的检查，比如零除，代码执行时检查。</li>
 <li>不检查：代码不报错，但是返回的是错误值，比如整数相除，5/2不返回0.2，而是0。</li>
 </ul>
-<h2 id="数组和集合">数组和集合</h2>
+<h3 id="数组和集合">数组和集合</h3>
 <pre><code>package com.company;  
   
 public class ArrayHailstone {  
@@ -73,10 +88,57 @@ public class ArrayHailstone {
   }  
 }
 </code></pre>
+<p>数组最明显的问题是会发生内存溢出，所以用列表比较合理。</p>
+<pre><code>package com.company;  
+  
+import java.util.ArrayList;  
+import java.util.List;  
+  
+public class ListHailstone {  
+    public static void main(String[] args){  
+        List&lt;Integer&gt; list=new ArrayList&lt;Integer&gt;();  
+ int n=3;  
+ while(n!=1){  
+            list.add(n);  
+ if(n%2==0){  
+                n=n/2;  
+  }else{  
+                n=3*n+1;  
+  }  
+        }  
+        list.add(n);  
+  System.out.print(list);  
+  }  
+}
+</code></pre>
+<p>数组和列表的区别是:<em><strong>列表是接口，不能直接构造的类型，list提供get、set、add等操作，写在等号右边。数组是类，可以提供这些操作具体实现的类型。从上面两段代码也能发现，数组不需要引入包，列表需要。</strong></em></p>
+<h3 id="方法">方法</h3>
+<pre><code>package com.company;  
+  
+import java.util.ArrayList;  
+import java.util.List;  
+  
+public class Hailstone {  
+    public static List&lt;Integer&gt; hailstoneSequence(int n){  
+        List&lt;Integer&gt; list=new ArrayList&lt;Integer&gt;();  
+ while(n!=1){  
+            list.add(n);  
+ if(n%2==0){  
+                n=n/2;  
+  }else{  
+                n=3*n+1;  
+  }  
+        }  
+        return list;  
+  }  
+}
+</code></pre>
+<h2 id="：basic-java">02：Basic Java</h2>
 <blockquote>
 <p>Written by luyao 20230428.</p>
 </blockquote>
 </div>
+  </div>
 </body>
 
 </html>
