@@ -1,86 +1,115 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh">
 
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Asset</title>
-    <link rel="stylesheet" href="../css/style.css" />
+  <title>资产时间表</title>
+  <!-- 确保Chart.js库的链接是最新的，并且放在head标签中 -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link rel="stylesheet" href="../css/style.css">
 </head>
 
 <body class="stackedit">
   <div class="stackedit__left">
     <div class="stackedit__toc">
-      
-<ul>
-<li>
-<ul>
-<li><a href="#买房打野战-timetable">买房打野战-timetable</a></li>
-<li><a href="#familys-yearly-asset-timetable">family’s yearly asset timetable</a></li>
-</ul>
-</li>
-</ul>
-
+      <ul>
+        <li><a href="#Hit-Target-timetable">Hit-Target-timetable</a></li>
+        <li><a href="#familys-yearly-asset-timetable">家庭年度资产时间表</a></li>
+      </ul>
     </div>
   </div>
   <div class="stackedit__right">
     <div class="stackedit__html">
-      <h3 id="买房打野战-timetable">买房打野战-timetable</h2>
-<h2 id="familys-yearly-asset-timetable">family’s yearly asset timetable</h2>
+      <h2 id="Hit-Target-timetable">Hit-Target-timetable</h2>
+      <h2 id="familys-yearly-asset-timetable">家庭年度资产时间表</h2>
 
-<table>
-<thead>
-<tr>
-<th></th>
-<th>2023.1.14</th>
-<th>2023.6.11</th>
-<th>2023.11.19</th>
-<th>2024.2.4</th>
-  <th>2024.5.30</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>y</td>
-<td>517785.89</td>
-<td>808862</td>
-<td>946434.49</td>
-<td>991734.71</td>
-  <td>1318297.54</td>
-</tr>
-<tr>
-<td>k</td>
-<td>413970.14</td>
-<td>469661</td>
-<td>552338.5</td>
-<td>596873</td>
-    <td>669142.2</td>
-</tr>
-  <tr>
-<td>现金资产</td>
-<td>-</td>
-<td>-</td>
-<td>1273645.57</td>
-<td>1341270.94</td>
-    <td>1721616</td>
-</tr>
-<tr>
-<td>合计</td>
-<td>931756.03</td>
-<td>1278524</td>
-<td>1498772.99</td>
-<td>1588607.71</td>
-  <td>1987439.74</td>
-</tr>
-</tbody>
-</table>
-<ul>
-<li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" checked disabled> 2024.1.14 总资产150万</li>
-<li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled=""> 2025.1.14 总资产251万</li>
-</ul>
+      <table>
+        <thead>
+          <tr>
+            <th>类型</th>
+            <th>2023.1.14</th>
+            <th>2023.6.11</th>
+            <th>2023.11.19</th>
+            <th>2024.2.4</th>
+            <th>2024.5.30</th>
+          </tr>
+        </thead>
+        <tbody id="tableData">
+          <!-- 表格数据将通过JavaScript动态生成 -->
+        </tbody>
+      </table>
 
+      <!-- 确保canvas元素有正确的id -->
+      <canvas id="myChart"></canvas>
     </div>
   </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // 表格和图表共享的数据
+      var data = {
+        labels: ['2023.1.14', '2023.6.11', '2023.11.19', '2024.2.4', '2024.5.30'],
+        datasets: [
+          { label: 'y', data: [517785.89, 808862, 946434.49, 991734.71, 1318297.54] },
+          { label: 'k', data: [413970.14, 469661, 552338.5, 596873, 669142.2] },
+          { label: '现金资产', data: [0, 0, 1273645.57, 1341270.94, 1721616] },
+          { label: '合计', data: [931756.03, 1278524, 1498772.99, 1588607.71, 1987439.74] }
+        ]
+      };
+
+      // 动态生成表格数据
+      var tableBody = document.getElementById('tableData');
+      data.datasets.forEach(function(dataset, index) {
+        var row = document.createElement('tr');
+        var typeCell = document.createElement('td');
+        typeCell.textContent = dataset.label;
+        row.appendChild(typeCell);
+        dataset.data.forEach(function(value) {
+          var cell = document.createElement('td');
+          cell.textContent = value.toFixed(2);
+          row.appendChild(cell);
+        });
+        tableBody.appendChild(row);
+      });
+
+      // 创建图表
+      var ctx = document.getElementById('myChart').getContext('2d');
+      var myChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: data.labels,
+          datasets: data.datasets.map(function(dataset, i) {
+            return {
+              label: dataset.label,
+              data: dataset.data,
+              borderColor: 'hsl(' + (360 * i / data.datasets.length) + ', 100%, 50%)',
+              backgroundColor: 'rgba(' + (255 * i / data.datasets.length) + ', 99, 132, 0.5)',
+              borderWidth: 1,
+              fill: false
+            };
+          })
+        },
+        options: {
+          scales: {
+            y: {
+              beginAtZero: true,
+              ticks: {
+                callback: function(value, index, values) {
+                  return value.toLocaleString();
+                }
+              }
+            }
+          },
+          plugins: {
+            legend: {
+              display: true
+            }
+          }
+        }
+      });
+    });
+  </script>
 </body>
 
 </html>
