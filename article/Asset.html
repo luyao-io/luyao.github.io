@@ -11,6 +11,7 @@
 </head>
 
 <body class="stackedit">
+
   <div class="stackedit__left">
     <div class="stackedit__toc">
       <ul>
@@ -19,6 +20,7 @@
       </ul>
     </div>
   </div>
+   
   <div class="stackedit__right">
     <div class="stackedit__html">
       <h2 id="Hit-Target-timetable">Hit-Target-timetable</h2>
@@ -40,11 +42,19 @@
           <!-- 表格数据将通过JavaScript动态生成 -->
         </tbody>
       </table>
-
+ <div id="todo-list">
+  <h3>待办列表</h3>
+  <ul>
+    <li><input type="checkbox" id="todo1"><label for="todo1">2024.1.14总资产150w</label></li>
+    <li><input type="checkbox" id="todo2"><label for="todo2">2025.1.14总资产251w</label></li>
+    <!-- 更多待办事项 -->
+  </ul>
+</div>
       <!-- 确保canvas元素有正确的id -->
       <canvas id="myChart"></canvas>
     </div>
   </div>
+
 
   <script>
     document.addEventListener('DOMContentLoaded', function() {
@@ -110,6 +120,8 @@
         }
       });
     });
+  // 找到ID为todo1的复选框，并将其设置为选中状态
+  document.getElementById('todo1').checked = true;
   </script>
 </body>
 
