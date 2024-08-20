@@ -264,10 +264,28 @@ code {
 	padding-right:0;
 	max-width:none
 }
-.task-list-item{
-	list-style-type:none
-}
-.task-list-item-checkbox{
-	margin:0 .2em 0 -1.3em
+#todo-list {
+  margin-top: 20px;
 }
 
+#todo-list ul {
+  list-style: none;
+  padding: 0;
+}
+
+#todo-list li {
+  margin-bottom: 10px;
+}
+
+#todo-list label {
+  margin-left: 5px;
+}
+.completed {
+  text-decoration: line-through;
+  color: grey;
+}
+/* 待办事项列表中已完成项的样式 */
+li input[type="checkbox"]:checked + label {
+  text-decoration: line-through;
+  color: grey;
+}
