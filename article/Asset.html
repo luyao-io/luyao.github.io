@@ -16,7 +16,7 @@
     <div class="stackedit__toc">
       <ul>
         <li><a href="#Hit-Target-timetable">Hit-Target-timetable</a></li>
-        <li><a href="#familys-yearly-asset-timetable">家庭年度资产时间表</a></li>
+        <li><a href="#familys-yearly-asset-timetable">Asset timtable</a></li>
       </ul>
     </div>
   </div>
@@ -24,7 +24,7 @@
   <div class="stackedit__right">
     <div class="stackedit__html">
       <h2 id="Hit-Target-timetable">Hit-Target-timetable</h2>
-      <h2 id="familys-yearly-asset-timetable">家庭年度资产时间表</h2>
+      <h2 id="familys-yearly-asset-timetable">Asset timtable</h2>
 
       <table>
         <thead>
@@ -36,6 +36,7 @@
             <th>2024.2.4</th>
             <th>2024.5.30</th>
            <th>2024.8.20</th>
+		   <th>2024.10.21</th>
           </tr>
         </thead>
         <tbody id="tableData">
@@ -60,12 +61,12 @@
     document.addEventListener('DOMContentLoaded', function() {
       // 表格和图表共享的数据
       var data = {
-        labels: ['2023.1.14', '2023.6.11', '2023.11.19', '2024.2.4', '2024.5.30','2024.8.20'],
+        labels: ['2023.1.14', '2023.6.11', '2023.11.19', '2024.2.4', '2024.5.30','2024.8.20','2024.10.21'],
         datasets: [
-          { label: 'y', data: [517785.89, 808862, 946434.49, 991734.71, 1318297.54,1399877] },
-          { label: 'k', data: [413970.14, 469661, 552338.5, 596873, 669142.2,784925] },
-          { label: '现金资产', data: [0, 0, 1273645.57, 1341270.94, 1721616,1885913] },
-          { label: '合计', data: [931756.03, 1278524, 1498772.99, 1588607.71, 1987439.74,2184802] }
+          { label: 'y', data: [517785.89, 808862, 946434.49, 991734.71, 1318297.54,1399877,1452165] },
+          { label: 'k', data: [413970.14, 469661, 552338.5, 596873, 669142.2,784925,870000] },
+          { label: '现金资产', data: [0, 0, 1273645.57, 1341270.94, 1721616,1885913,2008026] },
+          { label: '合计', data: [931756.03, 1278524, 1498772.99, 1588607.71, 1987439.74,2184802.00,2322165] }
         ]
       };
 
