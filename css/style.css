@@ -11,31 +11,29 @@
     font-weight: normal;
     font-style: normal;
 }
-body {
-	counter-reset:a b
+
+/* 合并body和html的共同属性 */
+body, html {
+    color: rgba(0,0,0,.75);
+    font-size: 16px;
+    font-variant-ligatures: common-ligatures;
+    line-height: 1.67;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    counter-reset: a b;
 }
+
 html {
-	font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; 
-	font-weight:400;
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-weight: 400;
 }
-body,html {
-	color:rgba(0,0,0,.75);
-	font-size:16px;
-	
-	font-variant-ligatures:common-ligatures;
-	line-height:1.67;
-	-webkit-font-smoothing:antialiased;
-	-moz-osx-font-smoothing:grayscale;
-	counter-reset:a b;
-}
-
-
-
 
 body {
-  width: 70%;
-  min-width: 800px;
+  width: 85%;
+  min-width: 320px;
   margin: 0 auto;
+  background-color: #f8f9fa;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
 /* || typography */
@@ -48,11 +46,14 @@ h1,h2,h3,h4,h5,h6 {
 }
 
 h1 {
-	
-  font-size: 2rem;
-  text-align: center;
-  color:#006699;
+  font-size: 2.5rem;
+  color: #2c3e50;
+  margin: 1.5em 0;
+  position: relative;
+  padding-bottom: 0.5em;
 }
+
+
 
 h2 {
     display: block;
@@ -118,10 +119,13 @@ header img {
 }
 
 nav {
-	height: 40px;
-	flex: 100%;
-	display: flex;
-
+  background: white;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  border-radius: 8px;
+  margin: 1rem 0;
+  height: 40px;
+  flex: 100%;
+  display: flex;
 }
     table {
       border-collapse: collapse;
@@ -288,4 +292,261 @@ code {
 li input[type="checkbox"]:checked + label {
   text-decoration: line-through;
   color: grey;
+}
+
+/* 进度条样式 */
+.progress-bar {
+    width: 100%;
+    height: 20px;
+    background-color: #e9ecef;
+    border-radius: 5px;
+    margin: 8px 0;
+    overflow: visible;
+    position: relative;
+}
+
+.progress-bar .progress {
+    height: 100%;
+    background: linear-gradient(90deg, #4CAF50, #45B649);
+    transition: width 0.3s ease;
+    border-radius: 4px;
+    position: relative;
+}
+
+/* 添加进度文字样式 */
+.progress-bar .progress::after {
+    content: attr(data-progress);
+    position: absolute;
+    right: 0;
+    top: -25px;
+    font-size: 14px;
+    color: #333;
+}
+
+/* 目标详情样式 */
+goal-details {
+  font-size: 3em;
+  color: #666;
+  margin-top: 4px;
+}
+
+/* 收入统计卡片样式 */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+.stat-card {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.stat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.stat-value {
+    font-size: 1.5em;
+    font-weight: bold;
+    margin: 10px 0;
+}
+
+.stat-trend {
+    font-size: 0.9em;
+}
+
+.stat-trend.positive {
+    color: #4CAF50;
+}
+
+.stat-trend.negative {
+    color: #f44336;
+}
+
+/* 适应三栏布局 */
+.financial-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+}
+
+/* 财务页面布局 */
+.financial-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 20px;
+  max-width: 100%;
+}
+
+/* 导航栏样式 */
+.stackedit__left {
+  position: fixed;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 150px;
+  padding: 20px;
+  background: #f5f5f5;
+  overflow-y: auto;
+}
+
+.stackedit__right {
+  margin-left: 0px;
+  padding: 20px;
+  display: flex;
+  justify-content: center;
+}
+
+.stackedit__html {
+  max-width: 1200px;
+  width: 100%;
+  padding: 0 20px;
+}
+
+.stackedit__html h1 {
+  text-align: center;
+}
+
+.stackedit__toc ul {
+  list-style: none;
+  padding: 0;
+}
+
+.stackedit__toc li {
+  margin: 10px 0;
+}
+
+.stackedit__toc a {
+  color: #333;
+  text-decoration: none;
+}
+
+/* 目标卡片样式 */
+.goal-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+  width: 100%;
+}
+
+.goal-card {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.goal-card h3 {
+  margin-top: 0;
+  color: #333;
+}
+
+.goal-value {
+  font-size: 24px;
+  font-weight: bold;
+  margin: 10px 0;
+}
+
+.goal-progress {
+  margin-top: 10px;
+}
+
+/* 表格样式 */
+.financial-reports {
+  width: 100%;
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  min-width: 600px;
+  border-collapse: collapse;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+th {
+  background: #f8f9fa;
+  padding: 12px 20px;
+  font-weight: 600;
+}
+
+td {
+  padding: 12px 20px;
+  border-bottom: 1px solid #e9ecef;
+}
+
+/* 图表容器样式 */
+canvas {
+  max-width: 100%;
+  height: auto;
+}
+
+/* 响应式布局 */
+@media screen and (max-width: 768px) {
+  .stackedit__left {
+    display: none;
+  }
+  
+  .stackedit__right {
+    margin-left: 0;
+    padding: 10px;
+  }
+  
+  .stackedit__html {
+    padding: 0 10px;
+  }
+  
+  .financial-container {
+    padding: 10px;
+  }
+  
+  .goal-card {
+    padding: 15px;
+  }
+}
+.tab-container {
+  margin-top: 20px;
+}
+  
+.tab-buttons {
+  margin-bottom: 20px;
+}
+  
+.tab-button {
+  padding: 12px 24px;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+  font-weight: 500;
+  margin-right: 10px;
+  border: none;
+  background: #f0f0f0;
+  cursor: pointer;
+}
+  
+.tab-button:hover {
+  background: #e9ecef;
+}
+  
+.tab-button.active {
+  background: #3498db;
+  box-shadow: 0 2px 4px rgba(52, 152, 219, 0.3);
+  color: white;
+}
+  
+.tab-content {
+  display: none;
+}
+  
+.tab-content.active {
+  display: block;
 }
