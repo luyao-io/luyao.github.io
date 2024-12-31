@@ -4,8 +4,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>资产时间表</title>
-  <!-- 确保Chart.js库的链接是最新的，并且放在head标签中 -->
+  <title>攒钱退休计划</title>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <link rel="stylesheet" href="../css/style.css">
 </head>
@@ -15,122 +14,211 @@
   <div class="stackedit__left">
     <div class="stackedit__toc">
       <ul>
-        <li><a href="#Hit-Target-timetable">Hit-Target-timetable</a></li>
-        <li><a href="#familys-yearly-asset-timetable">Asset timtable</a></li>
+        <li><a href="#retirement-plan">攒钱退休计划</a></li>
+        <li><a href="#financial-goals">财务目标</a></li>
+        <li><a href="#financial-reports">资产报表</a></li>
       </ul>
     </div>
   </div>
-   
+
   <div class="stackedit__right">
     <div class="stackedit__html">
-      <h2 id="Hit-Target-timetable">Hit-Target-timetable</h2>
-      <h2 id="familys-yearly-asset-timetable">Asset timtable</h2>
+      <h1 id="retirement-plan">攒钱退休计划</h1>
+      
+      <div class="financial-container">
+        <!-- 修改后的财务目标区域 -->
+        <section class="goal-cards">
+          <div class="goal-card">
+            <h3>20240114</h3>
+            <div class="goal-value">150万</div>
+            <div class="goal-details">攒钱目标：第一个一百万</div>
+            <div class="progress-bar">
+              <div class="progress" style="width: 100%">100%</div>
+            </div>
+          </div>
+          
+          <div class="goal-card">
+            <h3>20250114</h3>
+            <div class="goal-value">251万</div>
+            <div class="goal-details">攒钱目标：可以买得起老破小了</div>
+            <div class="progress-bar">
+              <div class="progress" style="width: 98.6%">98.6%</div>
+            </div>
+          </div>
+          <div class="goal-card">
+            <h3>20260114</h3>
+            <div class="goal-value">350万</div>
+            <div class="goal-details">攒钱目标：争取出国游</div>
+            <div class="progress-bar">
+              <div class="progress" style="width: 0%">0%</div>
+            </div>
+          </div>
+          
+          <div class="goal-card">
+            <h3>20280114</h3>
+            <div class="goal-value">600万</div>
+            <div class="goal-details">攒钱目标：初步财务自由</div>
+            <div class="progress-bar">
+              <div class="progress" style="width: 0%">0%</div>
+            </div>
+          </div>
+        </section>
 
-      <table>
-        <thead>
-          <tr>
-            <th>类型</th>
-            <th>2023.1.14</th>
-            <th>2023.6.11</th>
-            <th>2023.11.19</th>
-            <th>2024.2.4</th>
-            <th>2024.5.30</th>
-           <th>2024.8.20</th>
-		   <th>2024.10.21</th>
-		   <th>2024.12.31</th>
-		  
-          </tr>
-        </thead>
-        <tbody id="tableData">
-          <!-- 表格数据将通过JavaScript动态生成 -->
-        </tbody>
-      </table>
- <div id="todo-list">
-  <h3>待办列表</h3>
-  <ul>
-    <li><input type="checkbox" id="todo1"><label for="todo1">2024.1.14总资产150w</label></li>
-    <li><input type="checkbox" id="todo2"><label for="todo2">2025.1.14总资产251w</label></li>
+        <!-- 保留资产报表区域 -->
+        <section class="financial-reports">
+          <h2 id="financial-reports">财务报表</h2>
+          <div class="tab-container">
+            <div class="tab-buttons">
+              <button class="tab-button active" data-tab="assets">资产统计</button>
+              <button class="tab-button" data-tab="income">收入统计</button>
+            </div>
+            
+            <div class="tab-content active" id="assets-tab">
+              <table>
+                <thead>
+                  <tr>
+                    <th>类型</th>
+                  </tr>
+                </thead>
+                <tbody id="assetsTableData"></tbody>
+              </table>
+              <canvas id="assetsChart"></canvas>
+            </div>
 
-    <!-- 更多待办事项 -->
-  </ul>
- <h3>----初级free----</h3>	 
-   <ul>
-	<li><input type="checkbox" id="todo2"><label for="todo2">2028.1.14总资产600w</label></li>
-  </ul>
-</div>
-      <!-- 确保canvas元素有正确的id -->
-      <canvas id="myChart"></canvas>
+            <div class="tab-content" id="income-tab">
+              <table>
+                <thead>
+                  <tr>
+                    <th>类型</th>
+                  </tr>
+                </thead>
+                <tbody id="incomeTableData"></tbody>
+              </table>
+              <canvas id="incomeChart"></canvas>
+            </div>
+          </div>
+        </section>
+      </div>
     </div>
   </div>
 
-
   <script>
     document.addEventListener('DOMContentLoaded', function() {
-      // 表格和图表共享的数据
-      var data = {
+      // 资产数据
+      const assetsData = {
         labels: ['2023.1.14', '2023.6.11', '2023.11.19', '2024.2.4', '2024.5.30','2024.8.20','2024.10.21','2024.12.31'],
         datasets: [
           { label: 'y', data: [517785.89, 808862, 946434.49, 991734.71, 1318297.54,1399877,1452165,1533616.67] },
           { label: 'k', data: [413970.14, 469661, 552338.5, 596873, 669142.2,784925,870000,941216.97] },
-         // { label: '现金资产', data: [0, 0, 1273645.57, 1341270.94, 1721616,1885913,2008026,2135018.97] },
           { label: '合计', data: [931756.03, 1278524, 1498772.99, 1588607.71, 1987439.74,2184802.00,2322165,2474833.64] }
         ]
       };
 
-      // 动态生成表格数据
-      var tableBody = document.getElementById('tableData');
-      data.datasets.forEach(function(dataset, index) {
-        var row = document.createElement('tr');
-        var typeCell = document.createElement('td');
-        typeCell.textContent = dataset.label;
-        row.appendChild(typeCell);
-        dataset.data.forEach(function(value) {
-          var cell = document.createElement('td');
-          cell.textContent = value.toFixed(2);
-          row.appendChild(cell);
-        });
-        tableBody.appendChild(row);
-      });
+      // 收入数据
+      const incomeData = {
+        labels: ['2019', '2020', '2021', '2022', '2023','2024'],
+        datasets: [
+          { label: 'y工资收入', data: [75207, 133872, 178826, 292756, 470731, 574368] },
+          { label: 'y投资收入', data: [null, null, null, null, null, null] },
+          { label: 'y总收入', data: [75207, 133872, 178826, 292756, 470731, 574368] },
+          { label: 'k工资收入', data: [91200, 227715, 254605, 207870, 247500, 313827] },
+          { label: 'k投资收入', data: [null, null, null, null, null, null] },
+          { label: 'k总收入', data: [91200, 227715, 254605, 207870, 247500, 313827] }
+        ]
+      };
 
-      // 创建图表
-      var ctx = document.getElementById('myChart').getContext('2d');
-      var myChart = new Chart(ctx, {
-        type: 'line',
-        data: {
-          labels: data.labels,
-          datasets: data.datasets.map(function(dataset, i) {
-            return {
+      // 通用创建表格函数
+      function createTable(data, tableId) {
+        const tableBody = document.getElementById(tableId);
+        const thead = tableBody.parentElement.querySelector('thead tr');
+        
+        // 清空现有表头（保留"类型"列）
+        while (thead.children.length > 1) {
+          thead.removeChild(thead.lastChild);
+        }
+        
+        // 添加表头数据
+        data.labels.forEach(label => {
+          const th = document.createElement('th');
+          th.textContent = label;
+          thead.appendChild(th);
+        });
+        
+        // 添加表格数据
+        tableBody.innerHTML = ''; // 清空现有数据
+        data.datasets.forEach(dataset => {
+          const row = document.createElement('tr');
+          const typeCell = document.createElement('td');
+          typeCell.textContent = dataset.label;
+          row.appendChild(typeCell);
+          dataset.data.forEach(value => {
+            const cell = document.createElement('td');
+            cell.textContent = value === null ? '-' : value.toFixed(2);
+            row.appendChild(cell);
+          });
+          tableBody.appendChild(row);
+        });
+      }
+
+      // 通用创建图表函数
+      function createChart(data, canvasId) {
+        const ctx = document.getElementById(canvasId).getContext('2d');
+        return new Chart(ctx, {
+          type: 'line',
+          data: {
+            labels: data.labels,
+            datasets: data.datasets.map((dataset, i) => ({
               label: dataset.label,
               data: dataset.data,
-              borderColor: 'hsl(' + (360 * i / data.datasets.length) + ', 100%, 50%)',
-              backgroundColor: 'rgba(' + (255 * i / data.datasets.length) + ', 99, 132, 0.5)',
+              borderColor: `hsl(${360 * i / data.datasets.length}, 100%, 50%)`,
+              backgroundColor: `rgba(${255 * i / data.datasets.length}, 99, 132, 0.5)`,
               borderWidth: 1,
               fill: false
-            };
-          })
-        },
-        options: {
-          scales: {
-            y: {
-              beginAtZero: true,
-              ticks: {
-                callback: function(value, index, values) {
-                  return value.toLocaleString();
+            }))
+          },
+          options: {
+            scales: {
+              y: {
+                beginAtZero: true,
+                ticks: {
+                  callback: value => value.toLocaleString()
                 }
               }
-            }
-          },
-          plugins: {
-            legend: {
-              display: true
+            },
+            plugins: {
+              legend: {
+                display: true
+              }
             }
           }
-        }
+        });
+      }
+
+      // 创建表格和图表
+      createTable(assetsData, 'assetsTableData');
+      createTable(incomeData, 'incomeTableData');
+      createChart(assetsData, 'assetsChart');
+      createChart(incomeData, 'incomeChart');
+
+      // Tab 切换逻辑
+      const tabButtons = document.querySelectorAll('.tab-button');
+      const tabContents = document.querySelectorAll('.tab-content');
+
+      tabButtons.forEach(button => {
+        button.addEventListener('click', () => {
+          tabButtons.forEach(btn => btn.classList.remove('active'));
+          tabContents.forEach(content => content.classList.remove('active'));
+          
+          button.classList.add('active');
+          const tabId = button.dataset.tab + '-tab';
+          document.getElementById(tabId).classList.add('active');
+        });
       });
     });
-  // 找到ID为todo1的复选框，并将其设置为选中状态
-  document.getElementById('todo1').checked = true;
   </script>
+
+ 
+
 </body>
 
 </html>
