@@ -278,7 +278,8 @@
               const tr = document.createElement('tr');
               row.slice(0, 12).forEach(cell => { // 只取前12列
                 const td = document.createElement('td');
-                td.textContent = cell;
+                const value = parseFloat(cell);
+                td.textContent = isNaN(value) ? cell : value.toFixed(2); // 保留两位小数
                 tr.appendChild(td);
               });
               tableBody.appendChild(tr);
