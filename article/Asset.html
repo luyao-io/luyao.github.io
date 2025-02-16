@@ -6,20 +6,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>攒钱退休计划</title>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
   <link rel="stylesheet" href="../css/style.css">
+
+  </style>
 </head>
 
 <body class="stackedit">
-
-  <div class="stackedit__left">
-    <div class="stackedit__toc">
-      <ul>
-        <li><a href="#retirement-plan">攒钱退休计划</a></li>
-        <li><a href="#financial-goals">财务目标</a></li>
-        <li><a href="#financial-reports">资产报表</a></li>
-      </ul>
-    </div>
-  </div>
 
   <div class="stackedit__right">
     <div class="stackedit__html">
@@ -50,7 +43,7 @@
             <div class="goal-value">350万</div>
             <div class="goal-details">攒钱目标：争取出国游</div>
             <div class="progress-bar">
-              <div class="progress" style="width: 0%">0%</div>
+              <div class="progress" style="width: 25%">25%</div>
             </div>
           </div>
           
@@ -71,13 +64,14 @@
             <div class="tab-buttons">
               <button class="tab-button active" data-tab="assets">资产统计</button>
               <button class="tab-button" data-tab="income">收入统计</button>
+              <button class="tab-button" data-tab="newTab">存量资产明细</button>
             </div>
             
             <div class="tab-content active" id="assets-tab">
               <table>
                 <thead>
                   <tr>
-                    <th>类型</th>
+                    <th>日期</th>
                   </tr>
                 </thead>
                 <tbody id="assetsTableData"></tbody>
@@ -96,6 +90,28 @@
               </table>
               <canvas id="incomeChart"></canvas>
             </div>
+
+            <div class="tab-content" id="newTab-tab">
+              <h3>Y的资产明细</h3>
+              <table>
+                <thead>
+                  <tr>
+                    <!-- 动态添加表头 -->
+                  </tr>
+                </thead>
+                <tbody id="yAssetTableData"></tbody>
+              </table>
+
+              <h3>K的资产明细</h3>
+              <table>
+                <thead>
+                  <tr>
+                    <!-- 动态添加表头 -->
+                  </tr>
+                </thead>
+                <tbody id="kAssetTableData"></tbody>
+              </table>
+            </div>
           </div>
         </section>
       </div>
@@ -106,11 +122,11 @@
     document.addEventListener('DOMContentLoaded', function() {
       // 资产数据
       const assetsData = {
-        labels: ['2023.1.14', '2023.6.11', '2023.11.19', '2024.2.4', '2024.5.30','2024.8.20','2024.10.21','2024.12.31','2025.01.16'],
+        labels: ['2023.1.14', '2023.6.11', '2023.11.19', '2024.2.4', '2024.5.30','2024.8.20','2024.10.21','2024.12.31','2025.01.16','2025.02.16'],
         datasets: [
-          { label: 'y', data: [517785.89, 808862, 946434.49, 991734.71, 1318297.54,1399877,1452165,1533616.67,1547133] },
-          { label: 'k', data: [413970.14, 469661, 552338.5, 596873, 669142.2,784925,870000,941216.97,964025] },
-          { label: '合计', data: [931756.03, 1278524, 1498772.99, 1588607.71, 1987439.74,2184802.00,2322165,2474833.64,2511158] }
+          { label: 'y', data: [517785.89, 808862, 946434.49, 991734.71, 1318297.54,1399877,1452165,1533616.67,1547133,1598940.31          ] },
+          { label: 'k', data: [413970.14, 469661, 552338.5, 596873, 669142.2,784925,870000,941216.97,964025,1160530.32          ] },
+          { label: '合计', data: [931756.03, 1278524, 1498772.99, 1588607.71, 1987439.74,2184802.00,2322165,2474833.64,2511158,2759470.63          ] }
         ]
       };
 
@@ -127,8 +143,8 @@
         ]
       };
 
-      // 通用创建表格函数
-      function createTable(data, tableId) {
+      // 通用创建纵表函数
+      function createVerticalTable(data, tableId) {
         const tableBody = document.getElementById(tableId);
         const thead = tableBody.parentElement.querySelector('thead tr');
         
@@ -138,21 +154,22 @@
         }
         
         // 添加表头数据
-        data.labels.forEach(label => {
+        data.datasets.forEach(dataset => {
           const th = document.createElement('th');
-          th.textContent = label;
+          th.textContent = dataset.label;
           thead.appendChild(th);
         });
-        
+
         // 添加表格数据
         tableBody.innerHTML = ''; // 清空现有数据
-        data.datasets.forEach(dataset => {
+        data.labels.slice().reverse().forEach((label, index) => {
           const row = document.createElement('tr');
-          const typeCell = document.createElement('td');
-          typeCell.textContent = dataset.label;
-          row.appendChild(typeCell);
-          dataset.data.forEach(value => {
+          const dateCell = document.createElement('td');
+          dateCell.textContent = label;
+          row.appendChild(dateCell);
+          data.datasets.forEach(dataset => {
             const cell = document.createElement('td');
+            const value = dataset.data[data.labels.length - 1 - index];
             cell.textContent = value === null ? '-' : value.toFixed(2);
             row.appendChild(cell);
           });
@@ -167,14 +184,30 @@
           type: 'line',
           data: {
             labels: data.labels,
-            datasets: data.datasets.map((dataset, i) => ({
-              label: dataset.label,
-              data: dataset.data,
-              borderColor: `hsl(${360 * i / data.datasets.length}, 100%, 50%)`,
-              backgroundColor: `rgba(${255 * i / data.datasets.length}, 99, 132, 0.5)`,
-              borderWidth: 1,
-              fill: false
-            }))
+            datasets: data.datasets.map((dataset, i) => {
+              let color;
+              switch (i) {
+                case 0:
+                  color = 'orange';
+                  break;
+                case 1:
+                  color = 'red';
+                  break;
+                case 2:
+                  color = 'blue';
+                  break;
+                default:
+                  color = `hsl(${360 * i / data.datasets.length}, 100%, 50%)`;
+              }
+              return {
+                label: dataset.label,
+                data: dataset.data,
+                borderColor: color,
+                backgroundColor: color,
+                borderWidth: 1,
+                fill: false
+              };
+            })
           },
           options: {
             scales: {
@@ -194,9 +227,9 @@
         });
       }
 
-      // 创建表格和图表
-      createTable(assetsData, 'assetsTableData');
-      createTable(incomeData, 'incomeTableData');
+      // 创建纵表和图表
+      createVerticalTable(assetsData, 'assetsTableData');
+      createVerticalTable(incomeData, 'incomeTableData');
       createChart(assetsData, 'assetsChart');
       createChart(incomeData, 'incomeChart');
 
@@ -214,10 +247,51 @@
           document.getElementById(tabId).classList.add('active');
         });
       });
+
+      // 公共函数：加载 Excel 数据
+      function loadExcelData(sheetIndex, tableId) {
+        fetch('./家庭财务管理手册2025.xlsx')
+          .then(response => response.arrayBuffer())
+          .then(data => {
+            const workbook = XLSX.read(data, { type: 'array' });
+            const sheet = workbook.Sheets[workbook.SheetNames[sheetIndex]];
+            const jsonData = XLSX.utils.sheet_to_json(sheet, { header: 1, defval: '' });
+
+            const tableBody = document.getElementById(tableId);
+            const thead = tableBody.parentElement.querySelector('thead tr');
+
+            // 清空现有表头和数据
+            thead.innerHTML = '';
+            tableBody.innerHTML = '';
+
+            // 设置表头
+            jsonData[0].slice(0, 12).forEach(header => { // 只取前12列
+              if (header !== undefined && header !== null && header !== '') {
+                const th = document.createElement('th');
+                th.textContent = header;
+                thead.appendChild(th);
+              }
+            });
+
+            // 设置数据
+            jsonData.slice(1).forEach(row => {
+              const tr = document.createElement('tr');
+              row.slice(0, 12).forEach(cell => { // 只取前12列
+                const td = document.createElement('td');
+                td.textContent = cell;
+                tr.appendChild(td);
+              });
+              tableBody.appendChild(tr);
+            });
+          })
+          .catch(error => console.error('Error loading Excel data:', error));
+      }
+
+      // 分别加载 y 和 k 的数据
+      loadExcelData(2, 'yAssetTableData'); // 第三个 sheet，展示 y 的数据
+      loadExcelData(3, 'kAssetTableData'); // 第四个 sheet，展示 k 的数据
     });
   </script>
-
- 
 
 </body>
 
