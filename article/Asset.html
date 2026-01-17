@@ -1,377 +1,327 @@
 <!DOCTYPE html>
-<html lang="zh">
-
+<html lang="zh-CN">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>攒钱退休计划</title>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
-  <link rel="stylesheet" href="../css/style.css">
-
-  </style>
-</head>
-
-<body class="stackedit">
-
-  <div class="stackedit__right">
-    <div class="stackedit__html">
-      <h1 id="retirement-plan">攒钱退休计划</h1>
-      
-      <div class="financial-container">
-        <!-- 修改后的财务目标区域 -->
-        <section class="goal-cards">
-          <div class="goal-card">
-            <h3>20240114</h3>
-            <div class="goal-value">150万</div>
-            <div class="goal-details">攒钱目标：第一个一百万</div>
-            <div class="progress-bar">
-              <div class="progress" style="width: 100%">100%</div>
-            </div>
-          </div>
-          
-          <div class="goal-card">
-            <h3>20250114</h3>
-            <div class="goal-value">251万</div>
-            <div class="goal-details">攒钱目标：买得起老破小</div>
-            <div class="progress-bar">
-              <div class="progress" style="width: 100%">100%</div>
-            </div>
-          </div>
-          <div class="goal-card">
-            <h3>20250715</h3>
-            <div class="goal-value">350万</div>
-            <div class="goal-details">攒钱目标：提前完成</div>
-            <div class="progress-bar">
-              <div class="progress" style="width: 100%">100%</div>
-            </div>
-          </div>
-          
-          <div class="goal-card">
-            <h3>20250913</h3>
-            <div class="goal-value">500万</div>
-            <div class="goal-details">攒钱目标：提前完成</div>
-            <div class="progress-bar">
-              <div class="progress" style="width: 100%">100%</div>
-            </div>
-          </div>
-          <div class="goal-card">
-            <h3>20251116</h3>
-            <div class="goal-value">550</div>
-            <div class="goal-details">提前完成</div>
-            <div class="progress-bar">
-              <div class="progress" style="width: 100%">100%</div>
-            </div>
-          </div>
-          <div class="goal-card">
-            <h3>20260714</h3>
-            <div class="goal-value">650万</div>
-            <div class="goal-details">攒钱目标：完成首付/生育决策</div>
-            <div class="progress-bar">
-              <div class="progress" style="width: 91%">91%</div>
-            </div>
-          </div>
-          <div class="goal-card">
-            <h3>2027</h3>
-            <div class="goal-value">800万</div>
-            <div class="goal-details">攒钱目标：启动生育或购房</div>
-            <div class="progress-bar">
-              <div class="progress" style="width: 0%">0%</div>
-            </div>
-          </div>
-          <div class="goal-card">
-            <h3>2029</h3>
-            <div class="goal-value">1000万</div>
-            <div class="goal-details">攒钱目标：财务自由</div>
-            <div class="progress-bar">
-              <div class="progress" style="width: 0%">0%</div>
-            </div>
-          </div>
-          <div class="goal-card">
-            <h3>2030</h3>
-            <div class="goal-value">1200万</div>
-            <div class="goal-details">攒钱目标：财务自由</div>
-            <div class="progress-bar">
-              <div class="progress" style="width: 0%">0%</div>
-            </div>
-          </div>
-        </section>
-
-        <!-- 保留资产报表区域 -->
-        <section class="financial-reports">
-          <h2 id="financial-reports">财务报表</h2>
-          <div class="tab-container">
-            <div class="tab-buttons">
-              <button class="tab-button active" data-tab="assets">资产统计</button>
-              <button class="tab-button" data-tab="income">收入统计</button>
-              <button class="tab-button" data-tab="newTab">存量资产明细</button>
-            </div>
-            
-            <div class="tab-content active" id="assets-tab">
-              <table>
-                <thead>
-                  <tr>
-                    <th>日期</th>
-                  </tr>
-                </thead>
-                <tbody id="assetsTableData"></tbody>
-              </table>
-              <canvas id="assetsChart"></canvas>
-            </div>
-
-            <div class="tab-content" id="income-tab">
-              <table>
-                <thead>
-                  <tr>
-                    <th>类型</th>
-                  </tr>
-                </thead>
-                <tbody id="incomeTableData"></tbody>
-              </table>
-              <canvas id="incomeChart"></canvas>
-            </div>
-
-            <div class="tab-content" id="newTab-tab">
-              <h3>Y的资产明细</h3>
-              <table>
-                <thead>
-                  <tr>
-                    <!-- 动态添加表头 -->
-                  </tr>
-                </thead>
-                <tbody id="yAssetTableData"></tbody>
-              </table>
-
-              <h3>K的资产明细</h3>
-              <table>
-                <thead>
-                  <tr>
-                    <!-- 动态添加表头 -->
-                  </tr>
-                </thead>
-                <tbody id="kAssetTableData"></tbody>
-              </table>
-            </div>
-          </div>
-        </section>
-      </div>
-    </div>
-  </div>
-
-  <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      // 资产数据
-      const assetsData = {
-        labels: ['2023.1.14', '2023.6.11', '2023.11.19', '2024.2.4', '2024.5.30','2024.8.20','2024.10.21','2024.12.31','2025.01.16','2025.02.16','2025.04.20','2025.05.29','2025.06.14','2025.07.15','2025.08.14','2025.09.13'
-          ,'2025.10.18','2025.11.16','2025.12.29','2026.01.17'
-        ],
-        datasets: [
-          { label: 'y', data: [517785.89, 808862, 946434.49, 991734.71, 1318297.54,1399877,1452165,1533616.67,1547133,1583309,1628032 ,1897480 ,1911273 ,1952614  ,1997683 ,2024986
-          ,2050840 ,2100912,2118011 ,2137638
-
-        ] },
-          { label: 'k', data: [413970.14, 469661, 552338.5, 596873, 669142.2,784925,870000,941216.97,964025,1160530.32 ,1083168 ,1304987 ,1376444 ,1659219 ,1967266 ,3030927 
-            ,3415437 ,3807410,3704013,3802657
-
-          ] },
-          { label: '合计', data: [931756.03, 1278524, 1498772.99, 1588607.71, 1987439.74,2184802.00,2322165,2474833.64,2511158,2743840,2711200 ,3202467 ,3287717 ,3611833 , 3964948,5055914
-         ,5466276,5908322,5822024,5940295
-
-
-
-         ] }
-        ]
-      };
-
-      // 收入数据
-      const incomeData = {
-        labels: ['2019', '2020', '2021', '2022', '2023','2024','2025'],
-        datasets: [
-          { label: 'y工资收入', data: [75207, 133872, 178826, 292756, 470731, 574368,638864] },
-          { label: 'k工资收入', data: [91200, 227715, 254605, 207870, 247500, 313827,885831] },
-        ]
-      };
-
-      // 通用创建纵表函数
-      function createVerticalTable(data, tableId) {
-        const tableBody = document.getElementById(tableId);
-        const thead = tableBody.parentElement.querySelector('thead tr');
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>攒钱退休计划 | Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
         
-        // 清空现有表头（保留"类型"列）
-        while (thead.children.length > 1) {
-          thead.removeChild(thead.lastChild);
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            transition: background-color 0.3s ease;
         }
-        
-        // 添加表头数据
-        data.datasets.forEach(dataset => {
-          const th = document.createElement('th');
-          th.textContent = dataset.label;
-          thead.appendChild(th);
-        });
 
-        // 添加表格数据
-        tableBody.innerHTML = ''; // 清空现有数据
-        data.labels.slice().reverse().forEach((label, index) => {
-          const row = document.createElement('tr');
-          const dateCell = document.createElement('td');
-          dateCell.textContent = label;
-          row.appendChild(dateCell);
-          data.datasets.forEach(dataset => {
-            const cell = document.createElement('td');
-            const value = dataset.data[data.labels.length - 1 - index];
-            cell.textContent = value === null ? '-' : value.toFixed(2);
-            row.appendChild(cell);
-          });
-          tableBody.appendChild(row);
-        });
-      }
-
-      // 存储图表实例
-      let chartInstances = {};
-
-      // 通用创建图表函数
-      function createChart(data, canvasId) {
-        const canvas = document.getElementById(canvasId);
-        if (!canvas) {
-          console.error('Canvas element not found:', canvasId);
-          return null;
+        .linear-card {
+            background: rgba(255, 255, 255, 0.02);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
-        
-        // 如果图表已存在，先销毁
-        if (chartInstances[canvasId]) {
-          chartInstances[canvasId].destroy();
+
+        .light .linear-card {
+            background: rgba(255, 255, 255, 1);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
         }
-        
-        const ctx = canvas.getContext('2d');
-        const chart = new Chart(ctx, {
-          type: 'line',
-          data: {
-            labels: data.labels,
-            datasets: data.datasets.map((dataset, i) => {
-              let color;
-              switch (i) {
-                case 0:
-                  color = 'orange';
-                  break;
-                case 1:
-                  color = 'red';
-                  break;
-                case 2:
-                  color = 'blue';
-                  break;
-                default:
-                  color = `hsl(${360 * i / data.datasets.length}, 100%, 50%)`;
-              }
-              return {
-                label: dataset.label,
-                data: dataset.data,
-                borderColor: color,
-                backgroundColor: color,
-                borderWidth: 1,
-                fill: false
-              };
-            })
-          },
-          options: {
-            responsive: true,
-            maintainAspectRatio: true,
-            scales: {
-              y: {
-                beginAtZero: true,
-                ticks: {
-                  callback: value => value.toLocaleString()
+
+        .linear-card:hover {
+            border-color: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+            box-shadow: 0 12px 24px -10px rgba(0, 0, 0, 0.4);
+        }
+
+        .progress-glow {
+            box-shadow: 0 0 15px rgba(59, 130, 246, 0.5);
+        }
+
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #333;
+            border-radius: 10px;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .animate-fade-in {
+            animation: fadeIn 0.6s ease-out forwards;
+        }
+    </style>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        border: "hsl(var(--border))",
+                        background: "hsl(var(--background))",
+                        brand: {
+                            y: '#f97316', // Orange
+                            k: '#a855f7', // Purple
+                            total: '#3b82f6' // Blue
+                        }
+                    }
                 }
-              }
-            },
-            plugins: {
-              legend: {
-                display: true
-              }
             }
-          }
-        });
+        }
+    </script>
+</head>
+<body class="bg-[#0b0c0d] text-slate-200 min-h-screen selection:bg-blue-500/30">
+
+    <nav class="sticky top-0 z-50 border-b border-white/5 bg-[#0b0c0d]/80 backdrop-blur-md px-6 py-4">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <div class="flex items-center gap-2">
+                <div class="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
+                    <i data-lucide="trending-up" class="text-white w-5 h-5"></i>
+                </div>
+                <h1 class="text-xl font-semibold tracking-tight">攒钱退休计划</h1>
+            </div>
+            <button id="themeToggle" class="p-2 rounded-full hover:bg-white/5 transition-colors">
+                <i data-lucide="sun" id="themeIcon" class="w-5 h-5"></i>
+            </button>
+        </div>
+    </nav>
+
+    <main class="max-w-7xl mx-auto px-6 py-10 space-y-12">
         
-        chartInstances[canvasId] = chart;
-        return chart;
-      }
+        <section class="animate-fade-in" style="animation-delay: 0.1s">
+            <div class="flex items-center gap-2 mb-6">
+                <i data-lucide="target" class="w-5 h-5 text-blue-400"></i>
+                <h2 class="text-lg font-medium">财务里程碑</h2>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4" id="goalContainer">
+                </div>
+        </section>
 
-      // 创建纵表和图表
-      createVerticalTable(assetsData, 'assetsTableData');
-      createVerticalTable(incomeData, 'incomeTableData');
-      createChart(assetsData, 'assetsChart');
-      createChart(incomeData, 'incomeChart');
+        <section class="animate-fade-in" style="animation-delay: 0.2s">
+            <div class="flex items-center gap-2 mb-6">
+                <i data-lucide="line-chart" class="w-5 h-5 text-blue-400"></i>
+                <h2 class="text-lg font-medium">资产增长趋势</h2>
+            </div>
+            <div class="linear-card rounded-2xl p-6 h-[450px]">
+                <canvas id="assetsChart"></canvas>
+            </div>
+        </section>
 
-      // Tab 切换逻辑
-      const tabButtons = document.querySelectorAll('.tab-button');
-      const tabContents = document.querySelectorAll('.tab-content');
+        <section class="animate-fade-in" style="animation-delay: 0.3s">
+            <div class="flex items-center gap-2 mb-6">
+                <i data-lucide="wallet" class="w-5 h-5 text-blue-400"></i>
+                <h2 class="text-lg font-medium">年度收入对比</h2>
+            </div>
+            <div class="linear-card rounded-2xl p-6 h-[400px]">
+                <canvas id="incomeChart"></canvas>
+            </div>
+        </section>
 
-      tabButtons.forEach(button => {
-        button.addEventListener('click', () => {
-          tabButtons.forEach(btn => btn.classList.remove('active'));
-          tabContents.forEach(content => content.classList.remove('active'));
-          
-          button.classList.add('active');
-          const tabId = button.dataset.tab + '-tab';
-          document.getElementById(tabId).classList.add('active');
-          
-          // Tab 切换后，resize 图表以确保正确显示
-          setTimeout(() => {
-            if (chartInstances['assetsChart']) {
-              chartInstances['assetsChart'].resize();
+        <section class="animate-fade-in" style="animation-delay: 0.4s">
+            <div class="flex items-center gap-2 mb-6">
+                <i data-lucide="table" class="w-5 h-5 text-blue-400"></i>
+                <h2 class="text-lg font-medium">历史资产快照</h2>
+            </div>
+            <div class="linear-card rounded-2xl overflow-hidden">
+                <div class="overflow-x-auto custom-scrollbar">
+                    <table class="w-full text-left border-collapse text-sm text-slate-400">
+                        <thead class="bg-white/5 text-slate-200">
+                            <tr>
+                                <th class="p-4 font-medium">快照日期</th>
+                                <th class="p-4 font-medium">Y 账户</th>
+                                <th class="p-4 font-medium">K 账户</th>
+                                <th class="p-4 font-medium">家庭总计</th>
+                            </tr>
+                        </thead>
+                        <tbody id="assetsTableBody" class="divide-y divide-white/5">
+                            </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="border-t border-white/5 mt-20 py-12 px-6 bg-black/20">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
+            <div class="space-y-1 text-center md:text-left">
+                <p class="text-slate-200 font-medium">Luyao</p>
+                <p class="text-sm text-slate-500">© 2026 Financial Freedom Path. All rights reserved.</p>
+            </div>
+            <div class="flex gap-6">
+                <a href="#" class="text-slate-400 hover:text-white transition-colors"><i data-lucide="github" class="w-5 h-5"></i></a>
+                <a href="#" class="text-slate-400 hover:text-white transition-colors"><i data-lucide="twitter" class="w-5 h-5"></i></a>
+                <a href="#" class="text-slate-400 hover:text-white transition-colors"><i data-lucide="linkedin" class="w-5 h-5"></i></a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // --- 数据配置 ---
+        const assetsData = {
+            labels: ['2023.01.14', '2023.06.11', '2023.11.19', '2024.02.04', '2024.05.30','2024.08.20','2024.10.21','2024.12.31','2025.01.16','2025.02.16','2025.04.20','2025.05.29','2025.06.14','2025.07.15','2025.08.14','2025.09.13','2025.10.18','2025.11.16','2025.12.29','2026.01.17'],
+            datasets: [
+                { label: 'Y 账户', data: [517785, 808862, 946434, 991734, 1318297, 1399877, 1452165, 1533616, 1547133, 1583309, 1628032, 1897480, 1911273, 1952614, 1997683, 2024986, 2050840, 2100912, 2118011, 2137638], color: '#f97316' },
+                { label: 'K 账户', data: [413970, 469661, 552338, 596873, 669142, 784925, 870000, 941216, 964025, 1160530, 1083168, 1304987, 1376444, 1659219, 1967266, 3030927, 3415437, 3807410, 3704013, 3802657], color: '#a855f7' },
+                { label: '家庭总计', data: [931756, 1278524, 1498772, 1588607, 1987439, 2184802, 2322165, 2474833, 2511158, 2743840, 2711200, 3202467, 3287717, 3611833, 3964948, 5055914, 5466276, 5908322, 5822024, 5940295], color: '#3b82f6' }
+            ]
+        };
+
+        const incomeData = {
+            labels: ['2019', '2020', '2021', '2022', '2023', '2024', '2025'],
+            datasets: [
+                { label: 'Y 工资收入', data: [75207, 133872, 178826, 292756, 470731, 574368, 638864], color: '#f97316' },
+                { label: 'K 工资收入', data: [91200, 227715, 254605, 207870, 247500, 313827, 885831], color: '#a855f7' }
+            ]
+        };
+
+        const goals = [
+            { date: '2024-01-14', val: '150万', desc: '第一个一百万', prog: 100 },
+            { date: '2025-01-14', val: '251万', desc: '买得起老破小', prog: 100 },
+            { date: '2025-09-13', val: '500万', desc: '提前完成里程碑', prog: 100 },
+            { date: '2026-07-14', val: '650万', desc: '首付/生育决策', prog: 91 },
+            { date: '2027', val: '800万', desc: '启动生育或购房', prog: 0 },
+            { date: '2029', val: '1000万', desc: '初步财务自由', prog: 0 },
+            { date: '2030', val: '1200万', desc: '完全退休目标', prog: 0 }
+        ];
+
+        // --- 初始化函数 ---
+        function init() {
+            lucide.createIcons();
+            renderGoals();
+            renderTable();
+            createAssetsChart();
+            createIncomeChart();
+            setupTheme();
+        }
+
+        // --- 渲染里程碑 ---
+        function renderGoals() {
+            const container = document.getElementById('goalContainer');
+            container.innerHTML = goals.map(g => `
+                <div class="linear-card rounded-xl p-5 flex flex-col justify-between space-y-4">
+                    <div class="flex justify-between items-start">
+                        <span class="text-xs font-bold text-blue-500 uppercase tracking-wider">${g.date}</span>
+                        ${g.prog === 100 ? '<i data-lucide="check-circle-2" class="w-4 h-4 text-blue-500"></i>' : ''}
+                    </div>
+                    <div>
+                        <div class="text-2xl font-bold text-white mb-1">${g.val}</div>
+                        <div class="text-sm text-slate-500">${g.desc}</div>
+                    </div>
+                    <div class="w-full bg-white/5 rounded-full h-1.5 overflow-hidden">
+                        <div class="bg-blue-600 h-full rounded-full transition-all duration-1000 ${g.prog === 100 ? 'progress-glow' : ''}" style="width: ${g.prog}%"></div>
+                    </div>
+                </div>
+            `).join('');
+            lucide.createIcons();
+        }
+
+        // --- 渲染资产表格 ---
+        function renderTable() {
+            const tbody = document.getElementById('assetsTableBody');
+            const rows = assetsData.labels.map((label, i) => {
+                return `
+                    <tr class="hover:bg-white/[0.02] transition-colors">
+                        <td class="p-4 text-slate-300">${label}</td>
+                        <td class="p-4 font-mono">¥${assetsData.datasets[0].data[i].toLocaleString()}</td>
+                        <td class="p-4 font-mono">¥${assetsData.datasets[1].data[i].toLocaleString()}</td>
+                        <td class="p-4 font-mono text-blue-400 font-medium">¥${assetsData.datasets[2].data[i].toLocaleString()}</td>
+                    </tr>
+                `;
+            }).reverse().join('');
+            tbody.innerHTML = rows;
+        }
+
+        // --- 图表通用配置 ---
+        const chartDefaults = {
+            responsive: true,
+            maintainAspectRatio: false,
+            interaction: { intersect: false, mode: 'index' },
+            plugins: {
+                legend: { position: 'top', align: 'end', labels: { boxWidth: 8, usePointStyle: true, color: '#94a3b8' } }
+            },
+            scales: {
+                y: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#64748b', callback: v => '¥' + v/10000 + 'w' } },
+                x: { grid: { display: false }, ticks: { color: '#64748b' } }
             }
-            if (chartInstances['incomeChart']) {
-              chartInstances['incomeChart'].resize();
-            }
-          }, 100);
-        });
-      });
+        };
 
-      // 公共函数：加载 Excel 数据
-      function loadExcelData(sheetIndex, tableId) {
-        fetch('./家庭财务管理手册2025.xlsx')
-          .then(response => response.arrayBuffer())
-          .then(data => {
-            const workbook = XLSX.read(data, { type: 'array' });
-            const sheet = workbook.Sheets[workbook.SheetNames[sheetIndex]];
-            const jsonData = XLSX.utils.sheet_to_json(sheet, { header: 1, defval: '' });
-
-            const tableBody = document.getElementById(tableId);
-            const thead = tableBody.parentElement.querySelector('thead tr');
-
-            // 清空现有表头和数据
-            thead.innerHTML = '';
-            tableBody.innerHTML = '';
-
-            // 设置表头
-            jsonData[0].slice(0, 12).forEach(header => { // 只取前12列
-              if (header !== undefined && header !== null && header !== '') {
-                const th = document.createElement('th');
-                th.textContent = header;
-                thead.appendChild(th);
-              }
+        function createAssetsChart() {
+            const ctx = document.getElementById('assetsChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: assetsData.labels,
+                    datasets: assetsData.datasets.map(d => ({
+                        label: d.label,
+                        data: d.data,
+                        borderColor: d.color,
+                        backgroundColor: d.color,
+                        borderWidth: 2,
+                        pointRadius: 3,
+                        pointHoverRadius: 6,
+                        tension: 0 // 强制直线
+                    }))
+                },
+                options: chartDefaults
             });
+        }
 
-            // 设置数据
-            jsonData.slice(1).forEach(row => {
-              const tr = document.createElement('tr');
-              row.slice(0, 12).forEach(cell => { // 只取前12列
-                const td = document.createElement('td');
-                const value = parseFloat(cell);
-                td.textContent = isNaN(value) ? cell : value.toFixed(2); // 保留两位小数
-                tr.appendChild(td);
-              });
-              tableBody.appendChild(tr);
+        function createIncomeChart() {
+            const ctx = document.getElementById('incomeChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'bar', // 收入使用柱状图更直观
+                data: {
+                    labels: incomeData.labels,
+                    datasets: incomeData.datasets.map(d => ({
+                        label: d.label,
+                        data: d.data,
+                        backgroundColor: d.color + 'bb',
+                        borderRadius: 4
+                    }))
+                },
+                options: {
+                    ...chartDefaults,
+                    scales: {
+                        y: { stacked: true, grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#64748b' } },
+                        x: { stacked: true, grid: { display: false }, ticks: { color: '#64748b' } }
+                    }
+                }
             });
-          })
-          .catch(error => console.error('Error loading Excel data:', error));
-      }
+        }
 
-      // 分别加载 y 和 k 的数据
-      loadExcelData(2, 'yAssetTableData'); // 第三个 sheet，展示 y 的数据
-      loadExcelData(3, 'kAssetTableData'); // 第四个 sheet，展示 k 的数据
-    });
-  </script>
+        // --- 主题切换 ---
+        function setupTheme() {
+            const btn = document.getElementById('themeToggle');
+            const html = document.documentElement;
+            const icon = document.getElementById('themeIcon');
 
+            // 默认深色主题，不添加 'light' 类
+            icon.setAttribute('data-lucide', 'sun');
+            lucide.createIcons();
+
+            btn.addEventListener('click', () => {
+                html.classList.toggle('light');
+                const isLight = html.classList.contains('light');
+                icon.setAttribute('data-lucide', isLight ? 'moon' : 'sun');
+                lucide.createIcons();
+                
+                // 重绘图表以适配颜色
+                Chart.instances.forEach(chart => {
+                    const textColor = isLight ? '#64748b' : '#94a3b8';
+                    chart.options.scales.x.ticks.color = textColor;
+                    chart.options.scales.y.ticks.color = textColor;
+                    chart.update();
+                });
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
 </body>
-
 </html>
