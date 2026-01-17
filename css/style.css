@@ -478,7 +478,8 @@ td {
 /* 图表容器样式 */
 canvas {
   max-width: 100%;
-  height: auto;
+  height: 400px !important;
+  margin-top: 20px;
 }
 
 /* 响应式布局 */

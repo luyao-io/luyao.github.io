@@ -5,7 +5,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>攒钱退休计划</title>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
   <link rel="stylesheet" href="../css/style.css">
 
@@ -68,7 +68,7 @@
             <div class="goal-value">650万</div>
             <div class="goal-details">攒钱目标：完成首付/生育决策</div>
             <div class="progress-bar">
-              <div class="progress" style="width: 32%">32%</div>
+              <div class="progress" style="width: 91%">91%</div>
             </div>
           </div>
           <div class="goal-card">
@@ -163,19 +163,21 @@
       // 资产数据
       const assetsData = {
         labels: ['2023.1.14', '2023.6.11', '2023.11.19', '2024.2.4', '2024.5.30','2024.8.20','2024.10.21','2024.12.31','2025.01.16','2025.02.16','2025.04.20','2025.05.29','2025.06.14','2025.07.15','2025.08.14','2025.09.13'
-          ,'2025.10.18','2025.11.16','2025.12.29'
+          ,'2025.10.18','2025.11.16','2025.12.29','2026.01.17'
         ],
         datasets: [
           { label: 'y', data: [517785.89, 808862, 946434.49, 991734.71, 1318297.54,1399877,1452165,1533616.67,1547133,1583309,1628032 ,1897480 ,1911273 ,1952614  ,1997683 ,2024986
-          ,2050840 ,2100912,2118011 
+          ,2050840 ,2100912,2118011 ,2137638
 
         ] },
           { label: 'k', data: [413970.14, 469661, 552338.5, 596873, 669142.2,784925,870000,941216.97,964025,1160530.32 ,1083168 ,1304987 ,1376444 ,1659219 ,1967266 ,3030927 
-            ,3415437 ,3807410,3704013 
+            ,3415437 ,3807410,3704013,3802657
 
           ] },
           { label: '合计', data: [931756.03, 1278524, 1498772.99, 1588607.71, 1987439.74,2184802.00,2322165,2474833.64,2511158,2743840,2711200 ,3202467 ,3287717 ,3611833 , 3964948,5055914
-         ,5466276,5908322,5822024
+         ,5466276,5908322,5822024,5940295
+
+
 
          ] }
         ]
@@ -183,14 +185,10 @@
 
       // 收入数据
       const incomeData = {
-        labels: ['2019', '2020', '2021', '2022', '2023','2024'],
+        labels: ['2019', '2020', '2021', '2022', '2023','2024','2025'],
         datasets: [
-          { label: 'y工资收入', data: [75207, 133872, 178826, 292756, 470731, 574368] },
-          { label: 'y投资收入', data: [null, null, null, null, null, null] },
-          { label: 'y总收入', data: [75207, 133872, 178826, 292756, 470731, 574368] },
-          { label: 'k工资收入', data: [91200, 227715, 254605, 207870, 247500, 313827] },
-          { label: 'k投资收入', data: [null, null, null, null, null, null] },
-          { label: 'k总收入', data: [91200, 227715, 254605, 207870, 247500, 313827] }
+          { label: 'y工资收入', data: [75207, 133872, 178826, 292756, 470731, 574368,638864] },
+          { label: 'k工资收入', data: [91200, 227715, 254605, 207870, 247500, 313827,885831] },
         ]
       };
 
@@ -228,10 +226,24 @@
         });
       }
 
+      // 存储图表实例
+      let chartInstances = {};
+
       // 通用创建图表函数
       function createChart(data, canvasId) {
-        const ctx = document.getElementById(canvasId).getContext('2d');
-        return new Chart(ctx, {
+        const canvas = document.getElementById(canvasId);
+        if (!canvas) {
+          console.error('Canvas element not found:', canvasId);
+          return null;
+        }
+        
+        // 如果图表已存在，先销毁
+        if (chartInstances[canvasId]) {
+          chartInstances[canvasId].destroy();
+        }
+        
+        const ctx = canvas.getContext('2d');
+        const chart = new Chart(ctx, {
           type: 'line',
           data: {
             labels: data.labels,
@@ -261,6 +273,8 @@
             })
           },
           options: {
+            responsive: true,
+            maintainAspectRatio: true,
             scales: {
               y: {
                 beginAtZero: true,
@@ -276,6 +290,9 @@
             }
           }
         });
+        
+        chartInstances[canvasId] = chart;
+        return chart;
       }
 
       // 创建纵表和图表
@@ -296,6 +313,16 @@
           button.classList.add('active');
           const tabId = button.dataset.tab + '-tab';
           document.getElementById(tabId).classList.add('active');
+          
+          // Tab 切换后，resize 图表以确保正确显示
+          setTimeout(() => {
+            if (chartInstances['assetsChart']) {
+              chartInstances['assetsChart'].resize();
+            }
+            if (chartInstances['incomeChart']) {
+              chartInstances['incomeChart'].resize();
+            }
+          }, 100);
         });
       });
 
